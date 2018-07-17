@@ -1,6 +1,8 @@
 package com.onebot.xmode
 
+import android.app.PendingIntent.getActivity
 import android.content.Intent
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +12,14 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnLocationChangedListener {
 
     val TAG = "XModeTest"
     val THRESHOLD = 120;
     val TEXT_SIZE = 24F;
+
+    private lateinit var myLocation: Location
+    private lateinit var myCurrentLocation: MyCurrentLocation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +49,17 @@ class MainActivity : AppCompatActivity() {
         //
         startService(Intent(this, XModeService::class.java))
 
+        //
+        // TASK 3
+        //
+        myCurrentLocation = MyCurrentLocation(this)
+        myCurrentLocation.buildGoogleApiClient(this)
+        myCurrentLocation.start()
 
+    }
+
+    override fun onLocationChanged(location:Location) {
+        Log.d(TAG, "location: " + location)
+        myLocation = location
     }
 }

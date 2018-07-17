@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 class XModeRunOnStartup: BroadcastReceiver() {
+    // handle the startup intent by starting the activity
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
         {
