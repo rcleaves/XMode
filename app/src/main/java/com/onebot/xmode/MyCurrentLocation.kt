@@ -12,7 +12,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 //import com.google.android.gms.maps.LocationSource
 
-public class MyCurrentLocation(onLocationChangedListener:OnLocationChangedListener):GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+/*
+ *       Use Google Play services to determine location based on:
+ *       " The Google Location Services API, part of Google Play services, is the preferred way to add location-awareness to your app."
+ */
+class MyCurrentLocation(onLocationChangedListener:OnLocationChangedListener):GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private lateinit var mGoogleApiClient: GoogleApiClient
     private lateinit var mLastLocation: Location
     private lateinit var mLocationRequest: LocationRequest
