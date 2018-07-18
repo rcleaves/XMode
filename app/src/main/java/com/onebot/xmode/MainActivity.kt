@@ -73,12 +73,14 @@ class MainActivity : AppCompatActivity(), OnLocationChangedListener {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         !== PackageManager.PERMISSION_GRANTED ||
                         ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        !== PackageManager.PERMISSION_GRANTED))
+                        !== PackageManager.PERMISSION_GRANTED) ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)
+                        !== PackageManager.PERMISSION_GRANTED)
         {
             // permission not granted, have to request
             ActivityCompat.requestPermissions(this,
-                    arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    MY_PERMISSIONS_REQUEST_CODE)
+                    arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.RECEIVE_BOOT_COMPLETED), MY_PERMISSIONS_REQUEST_CODE)
         } else {
             myCurrentLocation = MyCurrentLocation(this)
             myCurrentLocation.buildGoogleApiClient(this)

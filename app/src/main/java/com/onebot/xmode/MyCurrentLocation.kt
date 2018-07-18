@@ -46,13 +46,19 @@ class MyCurrentLocation(onLocationChangedListener:OnLocationChangedListener):Goo
         mGoogleApiClient.disconnect()
     }
 
+    val TAG = "MyCurrentLocation"
+
     override fun onConnected(bundle: Bundle?) {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this)
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient)
-        if (mLastLocation != null)
-        {
-            onLocationChangedListener.onLocationChanged(mLastLocation)
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this)
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient)
+            if (mLastLocation != null)
+            {
+                onLocationChangedListener.onLocationChanged(mLastLocation)
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "caught: " + e, e);
         }
     }
 

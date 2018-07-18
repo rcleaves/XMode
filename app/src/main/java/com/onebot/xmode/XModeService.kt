@@ -4,8 +4,9 @@ import android.app.Service
 import android.content.Intent
 import android.os.Handler;
 import android.os.IBinder
+import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
-import com.onebot.xmode.MainActivity.Companion.myLocation
 import java.util.*
 import java.text.SimpleDateFormat;
 
@@ -17,6 +18,8 @@ class XModeService: Service() {
 
     // timer handling
     private var mTimer: Timer?  = null
+
+    private val TAG = "XModeService"
 
     // needed for superclass
     override fun onBind(intent: Intent): IBinder? {
@@ -37,16 +40,15 @@ class XModeService: Service() {
             mt = Timer()
         }
         // schedule task
-        mt.scheduleAtFixedRate(TimeDisplayTimerTask(), 0, NOTIFY_INTERVAL)
+        mt.scheduleAtFixedRate(LocationDisplayTask(), 0, NOTIFY_INTERVAL)
 
         if(BuildConfig.FLAVOR.equals("debugLocation")) {
             // debug variant
-            NUM_SECS = 20;
+            NUM_SECS = 60;
         } else {
             // release variant
             NUM_SECS = 60*60;
         }
-
     }
 
     // keep service running even when in background
@@ -56,28 +58,26 @@ class XModeService: Service() {
     }
 
     // runnable task for executing
-    internal inner class TimeDisplayTimerTask:TimerTask() {
-        private// get date time in custom format
-        val dateTime:String
-
-            get() {
-                val sdf = SimpleDateFormat("[yyyy/MM/dd - HH:mm:ss]")
-                return sdf.format(Date())
-            }
+    internal inner class LocationDisplayTask:TimerTask() {
 
         // run on another thread
         override fun run() {
             mHandler.post(object:Runnable {
-                public override fun run() {
-                    // display toast
-                        Toast.makeText(getApplicationContext(), "LOCATION: " + MainActivity.myLocation?.toString(),
-                                Toast.LENGTH_LONG).show()
+                override fun run() {
+                    // check for first 'uninitiated' value of location
+                    if (MainActivity.myLocation.latitude !== 0.0 && MainActivity.myLocation.longitude !== 0.0) {
+                        // display toast in center
+                        val  toast:Toast = Toast.makeText(getApplicationContext(),
+                                "LOCATION: " + MainActivity.myLocation?.toString(),
+                                Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
+                        Log.d(TAG, MainActivity.myLocation.toString())
                     }
 
-                // TODO - put data into 1) google cloud database (noSQL)
-                // 2) SQLite on device (not recommeneded if you need to process the data on back-end)
-
-
+                    // TODO - put data into 1) google cloud datastore (noSQL)
+                    // 2) SQLite on device (not recommeneded if you need to process the data on back-end)
+                }
             })
         }
     }

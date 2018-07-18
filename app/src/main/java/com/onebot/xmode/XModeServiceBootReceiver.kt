@@ -9,7 +9,7 @@ class XModeServiceBootReceiver: BroadcastReceiver() {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
         {
             val serviceIntent = Intent(context, XModeService::class.java)
-            context.startService(serviceIntent)
+            //context.startService(serviceIntent)
         }
     }
 }
